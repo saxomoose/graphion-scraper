@@ -1,0 +1,4 @@
+.venv/
+.vscode/
+dev-requirements.in
+requirements.in
