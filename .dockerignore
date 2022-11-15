@@ -1,0 +1,7 @@
+.gitignore
+.venv/
+.vscode/
+dev-requirements.in
+Dockerfile
+README.md
+requirements.in

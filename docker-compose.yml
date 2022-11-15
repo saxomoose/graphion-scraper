@@ -1,0 +1,23 @@
+version: "3"
+services:
+  db:
+    image: "postgres:latest"
+    ports:
+      - "5432:5432"
+    restart: "always"
+    environment:
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - "db_data:/var/lib/postgresql/data/"
+  scraper:
+    build:
+      context: .
+      dockerfile: "Dockerfile"
+    image: "scraper"
+    depends_on:
+      - "db"
+    security_opt:
+      - "seccomp=seccomp_profile.json"
+
+volumes:
+  db_data:
