@@ -2,4 +2,5 @@
 .venv/
 .vscode/
 dev-requirements.in
+dummy/
 requirements.in
