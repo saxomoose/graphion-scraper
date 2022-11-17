@@ -1,23 +1,40 @@
 version: "3"
 services:
   db:
-    image: "postgres:latest"
+    build:
+      context: "./database"
+      dockerfile: "Dockerfile"
+    image: "db"
     ports:
       - "5432:5432"
     restart: "always"
     environment:
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "${DB_DATABASE}"
+    networks:
+      - "cbe_network"
     volumes:
+      # - "./dummy:/dummy"
       - "db_data:/var/lib/postgresql/data/"
-  scraper:
-    build:
-      context: .
-      dockerfile: "Dockerfile"
-    image: "scraper"
-    depends_on:
-      - "db"
-    security_opt:
-      - "seccomp=seccomp_profile.json"
+  # scraper:
+  #   build:
+  #     context: .
+  #     dockerfile: "Dockerfile"
+  #   image: "scraper"
+  #   networks:
+  #     - "cbe_network"
+  #   security_opt:
+  #     - "seccomp=seccomp_profile.json"
+  #   depends_on:
+  #     - "db"
+
+networks:
+  cbe_network: {
+    name: "cbe_network",
+    driver: "bridge"
+  }
 
 volumes:
-  db_data:
+  db_data: {
+    name: "db_data"
+  }

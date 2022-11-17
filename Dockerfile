@@ -2,6 +2,12 @@ FROM python:3.11
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+## venv set-up.
+ENV VIRTUAL_ENV=/opt/venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# playwright install.
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 # 1. Add tip-of-tree Playwright package to install its browsers.
@@ -24,12 +30,7 @@ RUN mkdir /ms-playwright && \
     rm -rf /ms-playwright-agent && \
     chmod -R 777 /ms-playwright
 
-## venv set-up.
-ENV VIRTUAL_ENV = /opt/venv
-RUN python -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-# Install dependencies.
+# Install scraper dependencies.
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 

@@ -26,6 +26,8 @@ playwright==1.27.1
     # via pytest-playwright
 pluggy==1.0.0
     # via pytest
+psycopg2==2.9.5
+    # via -r requirements.in
 pyee==8.1.0
     # via playwright
 pyparsing==3.0.9
