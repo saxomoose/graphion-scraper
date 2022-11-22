@@ -1,3 +1,4 @@
+# TODO: multi-stage build.
 FROM python:3.11
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -21,10 +22,7 @@ COPY ./dist/*-manylinux*.whl /tmp/
 RUN mkdir /ms-playwright && \
     mkdir /ms-playwright-agent && \
     cd /ms-playwright-agent && \
-    # if its amd64 then install the manylinux1_x86_64 pip package
-    if [ "$(uname -m)" = "x86_64" ]; then pip install /tmp/*manylinux1_x86_64*.whl; fi && \
-    # if its arm64 then install the manylinux1_aarch64 pip package
-    if [ "$(uname -m)" = "aarch64" ]; then pip install /tmp/*manylinux_2_17_aarch64*.whl; fi && \
+    pip install /tmp/*manylinux1_x86_64*.whl && \
     playwright install chromium --with-deps && rm -rf /var/lib/apt/lists/* && \
     rm /tmp/*.whl && \
     rm -rf /ms-playwright-agent && \

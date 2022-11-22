@@ -14,27 +14,24 @@ services:
     networks:
       - "cbe_network"
     volumes:
-      # - "./dummy:/dummy"
       - "db_data:/var/lib/postgresql/data/"
-  # scraper:
-  #   build:
-  #     context: .
-  #     dockerfile: "Dockerfile"
-  #   image: "scraper"
-  #   networks:
-  #     - "cbe_network"
-  #   security_opt:
-  #     - "seccomp=seccomp_profile.json"
-  #   depends_on:
-  #     - "db"
+  scraper:
+    build:
+      context: "."
+      dockerfile: "Dockerfile"
+    image: "scraper"
+    networks:
+      - "cbe_network"
+    security_opt:
+      - "seccomp=seccomp_profile.json"
+    depends_on:
+      - "db"
 
 networks:
-  cbe_network: {
-    name: "cbe_network",
+  cbe_network:
+    name: "cbe_network"
     driver: "bridge"
-  }
 
 volumes:
-  db_data: {
+  db_data:
     name: "db_data"
-  }
