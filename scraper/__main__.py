@@ -1,5 +1,4 @@
-from scraper import db_service
-from scraper import scraper_service
+from scraper import db_service, scraper_service
 
 
 def main():

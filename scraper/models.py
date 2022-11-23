@@ -1,7 +1,7 @@
 import datetime
 import enum
-from dataclasses import dataclass
 import typing
+from dataclasses import dataclass
 
 
 class FunctionEnum(enum.StrEnum):
