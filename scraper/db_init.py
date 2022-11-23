@@ -2,6 +2,7 @@ import os
 
 import dotenv
 import psycopg2
+from psycopg2 import pool
 
 from scraper import utils
 
@@ -14,7 +15,7 @@ _CONNECTION_POOL = None
 def _initialize_connection_pool():
     global _CONNECTION_POOL
     try:
-        connection_pool = psycopg2.pool.SimpleConnectionPool(
+        connection_pool = pool.SimpleConnectionPool(
             1,
             20,
             user=os.getenv("DB_USERNAME"),

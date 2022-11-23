@@ -55,21 +55,34 @@ def parse_dictionary(officers):
     for key, value in officers.items():
         for string in value:
             if ",\xa0" in string:
-                parents[key] = models.Person(string)
+                # Only adds model to dict if not already present.
+                model = models.Person(string)
+                try:
+                    model_key = list(parents.keys())[
+                        list(parents.values()).index(model)
+                    ]
+                    parents[key] = parents[model_key]
+                except (ValueError):
+                    parents[key] = model
             if re.match(r"\d{4}\.\d{3}\.\d{3}", string):
-                parents[key] = models.Entity(string)
+                model = models.Entity(string)
+                try:
+                    model_key = list(parents.keys())[
+                        list(parents.values()).index(model)
+                    ]
+                    parents[key] = parents[model_key]
+                except (ValueError):
+                    parents[key] = model
 
     children = dict()
     for key, value in officers.items():
         if len(value) == 3:
-            children[key] = models.EntityPerson(
-                function_str=value[0], start_date_str=value[2]
-            )
+            children[key] = models.Pivot(function_str=value[0], start_date_str=value[2])
         if len(value) == 4:
-            children[key] = models.EntityEntity(
-                representative_entity_str=value[2],
+            children[key] = models.Pivot(
                 function_str=value[0],
                 start_date_str=value[3],
+                representative_entity_str=value[2],
             )
 
     return parents, children

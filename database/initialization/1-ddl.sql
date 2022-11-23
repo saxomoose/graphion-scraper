@@ -26,21 +26,13 @@ ALTER SCHEMA cbe OWNER TO postgres;
 
 -- Create types.
 
-CREATE TYPE cbe.entities_function_enum AS ENUM (
-    'director',
-    'person_in_charge_of_daily_management'
-);
-
-ALTER TYPE cbe.entities_function_enum OWNER TO postgres;
-
-
-CREATE TYPE cbe.persons_function_enum AS ENUM (
+CREATE TYPE cbe.function_enum AS ENUM (
     'director',
     'permanent_representative',
     'person_in_charge_of_daily_management'
 );
 
-ALTER TYPE cbe.persons_function_enum OWNER TO postgres;
+ALTER TYPE cbe.function_enum OWNER TO postgres;
 
 -- Create tables.
 
@@ -102,7 +94,7 @@ CREATE TABLE cbe.entities_persons (
     id integer not null,
     entity_id integer NOT NULL,
     person_id integer NOT NULL,
-    function cbe.persons_function_enum NOT NULL,
+    function cbe.function_enum NOT NULL,
     start_date date NOT NULL,
     UNIQUE(entity_id, person_id, function)
 );
@@ -131,7 +123,7 @@ CREATE TABLE cbe.entities_entities (
     id integer not null,
     represented_entity_id integer NOT NULL,
     representative_entity_id integer NOT NULL,
-    function cbe.entities_function_enum NOT NULL,
+    function cbe.function_enum NOT NULL,
     person_id integer NOT NULL,
     start_date date NOT NULL,
     UNIQUE(represented_entity_id, representative_entity_id, function)
