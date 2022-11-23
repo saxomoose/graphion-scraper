@@ -1,4 +1,3 @@
-import pprint
 import re
 
 import bs4
@@ -17,11 +16,12 @@ def retrieve_target(enterprise_number):
     with sync_api.sync_playwright() as p:
         try:
             browser = p.chromium.launch()
+            # context = browser.new_context()
             page = browser.new_page()
             page.goto(
-                f"https://kbopub.economie.fgov.be/kbopub/toonondernemingps.html?ondernemingsnummer={enterprise_number}"
+                f"https://kbopub.economie.fgov.be/kbopub/toonondernemingps.html?lang=en&ondernemingsnummer={enterprise_number}"
             )
-            page.get_by_text("Toon de functiehouders").click()
+            page.get_by_text("Show the legal functions").click()
             content = page.content()
             browser.close()
         except (PlaywrightError, PlaywrightTimeoutError) as e:
@@ -46,7 +46,6 @@ def parse_target(content):
 
         officers[row_index] = officer
 
-    # pprint(officers)
     return officers
 
 

@@ -13,7 +13,7 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 # 1. Add tip-of-tree Playwright package to install its browsers.
 #    The package should be built beforehand from tip-of-tree Playwright.
-COPY ./dist/*-manylinux*.whl /tmp/
+COPY ./playwright/*-manylinux*.whl /tmp/
 
 # 2. Bake in browsers & deps.
 #    Browsers will be downloaded in `/ms-playwright`.

@@ -1,6 +1,3 @@
-import pprint
-
-import psycopg2
 from psycopg2 import extras
 
 from scraper import db_init, models, utils
@@ -29,11 +26,10 @@ def insert_parents(enterprise_number, parents: dict):
     for parent_key, value in parents.items():
         if value not in unique_parents.values():
             unique_parents[parent_key] = value
-    # pprint.pprint(unique_parents)
     ids = dict()
     for parent_key, value in unique_parents.items():
         if isinstance(value, models.Entity):
-            pk = cursor.execute(
+            cursor.execute(
                 """
                 INSERT INTO cbe.entities (enterprise_number)
                 VALUES (%s)
@@ -65,7 +61,6 @@ def insert_parents(enterprise_number, parents: dict):
 
 # Insert pivot entities.
 def insert_children(target_pk: int, parents: dict, children: dict):
-    pprint.pprint(children)
     connection = connection_pool.getconn()
     cursor = connection.cursor()
 
