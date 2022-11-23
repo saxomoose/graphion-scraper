@@ -6,3 +6,4 @@ dev-requirements.in
 dummy/
 requirements.in
 scraper/test-db-connection.py
+scraper/__pycache__/
