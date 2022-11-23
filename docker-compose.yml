@@ -28,7 +28,7 @@ services:
     networks:
       - "cbe_network"
     security_opt:
-      - "seccomp=seccomp_profile.json"
+      - "seccomp=playwright/seccomp_profile.json"
     depends_on:
       db:
         condition: service_healthy

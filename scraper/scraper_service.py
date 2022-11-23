@@ -29,7 +29,6 @@ def retrieve_target(enterprise_number):
     return content
 
 
-# TODO: error handling.
 def parse_target(content):
     try:
         parse_tree = bs4.BeautifulSoup(content, "lxml")

@@ -102,13 +102,3 @@ def insert_children(target_pk: int, parents: dict, children: dict):
     connection.commit()
     cursor.close()
     connection_pool.putconn(connection)
-
-
-# values_list = []
-# values_list.append((value.last_name, value.first_name))
-# sql = """INSERT INTO cbe.persons (last_name, first_name)
-#     VALUES %s
-#     ON CONFLICT ON CONSTRAINT persons_last_name_first_name_key DO NOTHING
-#     RETURNING id;
-#     """
-# ids = extras.execute_values(cursor, sql, values_list, fetch=True)
