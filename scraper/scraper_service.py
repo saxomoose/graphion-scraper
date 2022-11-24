@@ -75,9 +75,11 @@ def parse_dictionary(officers):
     children = dict()
     for key, value in officers.items():
         if len(value) == 3:
-            children[key] = models.Pivot(function_str=value[0], start_date_str=value[2])
+            children[key] = models.EntityPerson(
+                function_str=value[0], start_date_str=value[2]
+            )
         if len(value) == 4:
-            children[key] = models.Pivot(
+            children[key] = models.EntityEntity(
                 function_str=value[0],
                 start_date_str=value[3],
                 representative_entity_str=value[2],

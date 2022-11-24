@@ -35,16 +35,14 @@ class Person:
 
 
 @dataclass
-class Pivot:
+class _Pivot:
     function: FunctionEnum
     start_date: datetime.date
-    representative_entity: typing.Optional[int] = None
 
     def __init__(
         self,
         function_str: str,
         start_date_str: str,
-        representative_entity_str: str = None,
     ):
         if function_str == "Director":
             self.function = FunctionEnum.DIRECTOR
@@ -57,6 +55,29 @@ class Pivot:
             self.function = FunctionEnum.PERMANENT_REPRESENTATIVE
         substring = start_date_str[6:]
         self.start_date = datetime.datetime.strptime(substring, "%B %d, %Y").date()
+
+
+@dataclass
+class EntityPerson(_Pivot):
+    def __init__(
+        self,
+        function_str: str,
+        start_date_str: str,
+    ):
+        super().__init__(function_str, start_date_str)
+
+
+@dataclass
+class EntityEntity(_Pivot):
+    representative_entity: typing.Optional[int] = None
+
+    def __init__(
+        self,
+        function_str: str,
+        start_date_str: str,
+        representative_entity_str: str = None,
+    ):
+        super().__init__(function_str, start_date_str)
         if representative_entity_str is not None:
             self.representative_entity = int(
                 "".join(c for c in representative_entity_str if c.isdigit())

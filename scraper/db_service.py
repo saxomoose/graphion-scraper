@@ -76,8 +76,12 @@ def insert_children(target_pk: int, parents: dict, children: dict):
     for parent_key, parent_value in parents.items():
         if isinstance(parent_value, models.Entity):
             for child_key, child_value in children.items():
-                if child_value.representative_entity == parent_value.enterprise_number:
-                    person_id = parents[child_key].id
+                if isinstance(child_value, models.EntityEntity):
+                    if (
+                        child_value.representative_entity
+                        == parent_value.enterprise_number
+                    ):
+                        person_id = parents[child_key].id
             entities_entities_values_list.append(
                 (
                     target_pk,
