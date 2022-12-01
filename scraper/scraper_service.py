@@ -1,3 +1,4 @@
+import pprint
 import re
 
 import bs4
@@ -34,8 +35,8 @@ def parse_target(content):
         parse_tree = bs4.BeautifulSoup(content, "lxml")
         table = parse_tree.find(id="toonfctie")
         rows = table.find_all("tr")
-    except (AttributeError):
-        return None
+    except (AttributeError) as e:
+        logger.error(e)
 
     officers = dict()
     for row_index, row in enumerate(rows):
@@ -79,10 +80,12 @@ def parse_dictionary(officers):
                 function_str=value[0], start_date_str=value[2]
             )
         if len(value) == 4:
-            children[key] = models.EntityEntity(
-                function_str=value[0],
-                start_date_str=value[3],
-                representative_entity_str=value[2],
-            )
+            for parent_key, parent_value in officers.items():
+                if value[2].strip("()") in parent_value:
+                    children[key] = models.EntityEntity(
+                        function_str=value[0],
+                        start_date_str=value[3],
+                        representative_entity=parent_key,
+                    )
 
     return parents, children

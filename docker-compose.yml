@@ -1,25 +1,5 @@
 version: "3"
 services:
-  db:
-    build:
-      context: "./database"
-      dockerfile: "Dockerfile"
-    image: "db"
-    ports:
-      - "5432:5432"
-    restart: "always"
-    environment:
-      POSTGRES_PASSWORD: "${DB_PASSWORD}"
-      POSTGRES_DB: "${DB_DATABASE}"
-    networks:
-      - "cbe_network"
-    volumes:
-      - "db_data:/var/lib/postgresql/data/"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
   scraper:
     build:
       context: "."
@@ -29,9 +9,6 @@ services:
       - "cbe_network"
     security_opt:
       - "seccomp=playwright/seccomp_profile.json"
-    depends_on:
-      db:
-        condition: service_healthy
 
 networks:
   cbe_network:

@@ -4,16 +4,15 @@ import typing
 from dataclasses import dataclass
 
 
-class FunctionEnum(enum.StrEnum):
-    DIRECTOR = "director"
-    PERMANENT_REPRESENTATIVE = "permanent_representative"
-    PERSON_IN_CHARGE_OF_DAILY_MANAGEMENT = "person_in_charge_of_daily_management"
+class FunctionEnum(enum.IntEnum):
+    DIRECTOR = 1
+    PERMANENT_REPRESENTATIVE = 2
+    PERSON_IN_CHARGE_OF_DAILY_MANAGEMENT = 3
 
 
 @dataclass
 class Entity:
     enterprise_number: int
-    id: typing.Optional[int] = None
 
     def __init__(self, enterprise_number_str: str):
         enterprise_number = int(
@@ -26,7 +25,6 @@ class Entity:
 class Person:
     last_name: str
     first_name: str
-    id: typing.Optional[int] = None
 
     def __init__(self, names_str: str):
         names = tuple(names_str.split(" ,\xa0 "))
@@ -69,16 +67,10 @@ class EntityPerson(_Pivot):
 
 @dataclass
 class EntityEntity(_Pivot):
-    representative_entity: typing.Optional[int] = None
+    representative_entity: int
 
     def __init__(
-        self,
-        function_str: str,
-        start_date_str: str,
-        representative_entity_str: str = None,
+        self, function_str: str, start_date_str: str, representative_entity: int
     ):
         super().__init__(function_str, start_date_str)
-        if representative_entity_str is not None:
-            self.representative_entity = int(
-                "".join(c for c in representative_entity_str if c.isdigit())
-            )
+        self.representative_entity = representative_entity
