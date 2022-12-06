@@ -46,46 +46,74 @@ def parse_target(content):
 
         officers[row_index] = officer
 
-    return officers
+    return _parse_dictionary_to_objects(officers)
 
 
-def parse_dictionary(officers):
-    parents = dict()
+def _parse_dictionary_to_objects(officers):
+    officers_obj = dict()
+    duplicated_keys = list()
+    entities = list()
     for key, value in officers.items():
         for string in value:
             if ",\xa0" in string:
-                # Only adds model to dict if not already present.
+                # If model already in dict, assign same reference to key.
                 model = models.Person(string)
                 try:
-                    model_key = list(parents.keys())[
-                        list(parents.values()).index(model)
+                    model_key = list(officers_obj.keys())[
+                        list(officers_obj.values()).index(model)
                     ]
-                    parents[key] = parents[model_key]
+                    officers_obj[key] = officers_obj[model_key]
+                    duplicated_keys.append(key)
                 except (ValueError):
-                    parents[key] = model
+                    officers_obj[key] = model
             if re.match(r"\d{4}\.\d{3}\.\d{3}", string):
+                entities.append(key)
                 model = models.Entity(string)
                 try:
-                    model_key = list(parents.keys())[
-                        list(parents.values()).index(model)
+                    model_key = list(officers_obj.keys())[
+                        list(officers_obj.values()).index(model)
                     ]
-                    parents[key] = parents[model_key]
+                    officers_obj[key] = officers_obj[model_key]
                 except (ValueError):
-                    parents[key] = model
+                    officers_obj[key] = model
 
-    children = dict()
+    permanent_representatives = dict()
     for key, value in officers.items():
-        if len(value) == 3:
-            children[key] = models.EntityPerson(
-                function_str=value[0], start_date_str=value[2]
-            )
-        if len(value) == 4:
-            for parent_key, parent_value in officers.items():
-                if value[2].strip("()") in parent_value:
-                    children[key] = models.EntityEntity(
-                        function_str=value[0],
-                        start_date_str=value[3],
-                        representative_entity=parent_key,
-                    )
+        if isinstance(officers_obj[key], models.Person):
+            if len(value) == 3:
+                officers_obj[key].functions.append(
+                    models.EntityPerson(function_str=value[0], start_date_str=value[2])
+                )
+            elif len(value) == 4:
+                officers_obj[key].functions.append(
+                    models.EntityPerson(function_str=value[0], start_date_str=value[3])
+                )
+                stripped = value[2].strip("()")
+                enterprise_number = int(
+                    str.join("", (c for c in stripped if c.isdigit()))
+                )
+                permanent_representatives[enterprise_number] = key
 
-    return parents, children
+    if duplicated_keys:
+        for key in duplicated_keys:
+            del officers_obj[key]
+
+    if permanent_representatives:
+        for (
+            enterprise_number,
+            permanent_representative_index,
+        ) in permanent_representatives.items():
+            for key in entities:
+                if officers_obj[key].enterprise_number == enterprise_number:
+                    officers_obj[key].functions.append(
+                        models.EntityEntity(
+                            function_str=officers[key][0],
+                            start_date_str=officers[key][2],
+                            permanent_representative=officers_obj[
+                                permanent_representative_index
+                            ],
+                        )
+                    )
+            del officers_obj[permanent_representative_index]
+
+    return officers_obj
