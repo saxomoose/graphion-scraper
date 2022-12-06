@@ -1,9 +1,7 @@
-import collections
 import dataclasses
 import json
-import pprint
 
-from scraper import models, utils
+from scraper import utils
 
 logger = utils.get_logger(__name__)
 
