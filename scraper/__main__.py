@@ -1,4 +1,4 @@
-from scraper import serialization_service, scraper_service
+from scraper import redis_service, scraper_service, serialization_service
 
 
 def main():
@@ -9,7 +9,7 @@ def main():
         officers_obj = scraper_service.parse_target(f)
     # officers_obj = scraper_service.parse_target(officers_table)
     json = serialization_service.to_json(enterprise_number, officers_obj)
-    print(json)
+    redis_service.store(enterprise_number, json)
     # Send serialized json to queue
 
 

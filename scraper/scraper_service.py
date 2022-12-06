@@ -56,7 +56,7 @@ def _parse_dictionary_to_objects(officers_raw):
         for string in value:
             if ",\xa0" in string:
                 # If model already in dict, assign same reference to key.
-                model = models.Person(string)
+                model = models.OfficerNat(string)
                 try:
                     model_key = list(officers.keys())[
                         list(officers.values()).index(model)
@@ -67,7 +67,7 @@ def _parse_dictionary_to_objects(officers_raw):
                     officers[key] = model
             if re.match(r"\d{4}\.\d{3}\.\d{3}", string):
                 entities.append(key)
-                model = models.Entity(string)
+                model = models.OfficerLeg(string)
                 try:
                     model_key = list(officers.keys())[
                         list(officers.values()).index(model)
@@ -78,7 +78,7 @@ def _parse_dictionary_to_objects(officers_raw):
 
     permanent_representatives = dict()
     for key, value in officers_raw.items():
-        if isinstance(officers[key], models.Person):
+        if isinstance(officers[key], models.OfficerNat):
             if len(value) == 3:
                 officers[key].functions.append(
                     models.EntityPerson(function=value[0], start_date=value[2])

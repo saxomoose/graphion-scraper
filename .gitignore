@@ -4,6 +4,7 @@
 database/earthquake.csv
 dev-requirements.in
 dummy/
+redis/users.acl
 requirements.in
-scraper/test-db-connection.py
 scraper/__pycache__/
+scraper/test-db-connection.py

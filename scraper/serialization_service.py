@@ -7,7 +7,6 @@ logger = utils.get_logger(__name__)
 
 
 def to_json(enterprise_number, officers_obj):
-
     wrapper = dict()
     officers_list = list()
     for value in officers_obj.values():
