@@ -2,14 +2,13 @@ import datetime
 import os
 
 import redis
+import zoneinfo
 from scraper import utils
 
 logger = utils.get_logger(__name__)
 
 
 def store(enterprise_number: int, json: str):
-
-    print(_time_until_end_of_day().seconds)
     seconds_until_end_of_day = _time_until_end_of_day().seconds
     client = redis.Redis(
         host="localhost",
@@ -22,6 +21,7 @@ def store(enterprise_number: int, json: str):
 
 
 def _time_until_end_of_day():
-    dt = datetime.datetime.now()
+    timezone = zoneinfo.ZoneInfo("Europe/Brussels")
+    dt = datetime.datetime.now(tz=timezone)
     tomorrow = dt + datetime.timedelta(days=1)
-    return datetime.datetime.combine(tomorrow, datetime.time.min) - dt
+    return datetime.datetime.combine(tomorrow, datetime.time.min, tzinfo=timezone) - dt
