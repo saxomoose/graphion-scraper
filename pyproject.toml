@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools"]
+# build-backend = "setuptools.build_meta"
+
+[project]
+name = "saxomoose.scraper"
+version = "0.0.1"
+dependencies = [
+    "beautifulsoup4",
+    "python-dotenv",
+    "lxml",
+    "pytest-playwright",
+    "redis",
+]
+
+[tool.setuptools.packages]
+find = {}  # Scan the project directory with the default parameters
+
+[tool.setuptools]
+py-modules = []
+
+[tool.isort]
+profile = "black"
+combine_as_imports = true

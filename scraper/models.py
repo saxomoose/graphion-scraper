@@ -40,7 +40,7 @@ class EntityPerson(_Pivot):
 
 
 @dataclasses.dataclass
-class OfficerNat:
+class Person:
     last_name: str
     first_name: str
     functions: typing.List[EntityPerson]
@@ -54,20 +54,20 @@ class OfficerNat:
 
 @dataclasses.dataclass
 class EntityEntity(_Pivot):
-    permanent_representative: OfficerNat
+    permanent_representative: Person
 
     def __init__(
         self,
         function: str,
         start_date: str,
-        permanent_representative: OfficerNat,
+        permanent_representative: Person,
     ):
         super().__init__(function, start_date)
         self.permanent_representative = permanent_representative
 
 
 @dataclasses.dataclass
-class OfficerLeg:
+class Entity:
     enterprise_number: int
     functions: typing.List[EntityEntity]
 

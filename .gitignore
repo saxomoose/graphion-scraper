@@ -8,3 +8,6 @@ redis/users.acl
 requirements.in
 scraper/__pycache__/
 scraper/test-db-connection.py
+saxomoose.scraper.egg-info/
+dist/
+saxomoose.scraper.egg-info

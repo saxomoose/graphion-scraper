@@ -1,12 +1,18 @@
+# === Compiler image ===
 # TODO: multi-stage build.
-FROM python:3.11
-
-ARG DEBIAN_FRONTEND=noninteractive
+FROM python:3.11 AS base
 
 ## venv set-up.
-ENV VIRTUAL_ENV=/opt/venv
-RUN python -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install dependencies.
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# === Playwright ===
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 # playwright install.
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
@@ -28,9 +34,12 @@ RUN mkdir /ms-playwright && \
     rm -rf /ms-playwright-agent && \
     chmod -R 777 /ms-playwright
 
-# Install scraper dependencies.
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+# === Runtime image ===
+
+FROM python:3.11-slim AS final
+
+COPY --from=base /opt/venv /opt/venv
+COPY --from=base /ms-playwright /ms-playwright
 
 # Create user to run as.
 RUN useradd -ms /bin/bash scraper
@@ -39,4 +48,7 @@ USER scraper
 COPY --chown=scraper:scraper . /app
 WORKDIR /app
 
+ENV PATH="/opt/venv/bin:$PATH"
+
 CMD ["python", "-m", "scraper"]
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
