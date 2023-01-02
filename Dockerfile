@@ -1,6 +1,4 @@
-# === Compiler image ===
-# TODO: multi-stage build.
-FROM python:3.11 AS base
+FROM python:3.11-slim
 
 ## venv set-up.
 RUN python -m venv /opt/venv
@@ -34,21 +32,12 @@ RUN mkdir /ms-playwright && \
     rm -rf /ms-playwright-agent && \
     chmod -R 777 /ms-playwright
 
-# === Runtime image ===
-
-FROM python:3.11-slim AS final
-
-COPY --from=base /opt/venv /opt/venv
-COPY --from=base /ms-playwright /ms-playwright
-
 # Create user to run as.
 RUN useradd -ms /bin/bash scraper
 USER scraper
 
 COPY --chown=scraper:scraper . /app
 WORKDIR /app
-
-ENV PATH="/opt/venv/bin:$PATH"
 
 CMD ["python", "-m", "scraper"]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]

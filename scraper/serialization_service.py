@@ -1,6 +1,5 @@
 import dataclasses
 import json
-
 from scraper import utils
 
 logger = utils.get_logger(__name__)

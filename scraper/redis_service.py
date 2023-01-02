@@ -1,8 +1,7 @@
 import datetime
 import os
-
-import redis
 import zoneinfo
+import redis
 from scraper import utils
 
 logger = utils.get_logger(__name__)

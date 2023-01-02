@@ -20,5 +20,6 @@ find = {}  # Scan the project directory with the default parameters
 py-modules = []
 
 [tool.isort]
-profile = "black"
 combine_as_imports = true
+lines_between_sections = 0
+profile = "black"

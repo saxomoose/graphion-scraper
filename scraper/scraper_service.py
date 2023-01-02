@@ -1,11 +1,9 @@
 import re
-
 import bs4
 from playwright.sync_api import (
     Error as PlaywrightError,
     TimeoutError as PlaywrightTimeoutError,
 )
-
 from playwright import sync_api
 from scraper import models, utils
 
