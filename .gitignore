@@ -4,10 +4,6 @@
 database/earthquake.csv
 dev-requirements.in
 dummy/
-redis/users.acl
+get-docker.sh
 requirements.in
 scraper/__pycache__/
-scraper/test-db-connection.py
-saxomoose.scraper.egg-info/
-dist/
-saxomoose.scraper.egg-info
