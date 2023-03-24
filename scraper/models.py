@@ -4,14 +4,14 @@ import enum
 import typing
 
 
-class FunctionEnum(enum.IntEnum):
-    DIRECTOR = 1
-    PERMANENT_REPRESENTATIVE = 2
-    PERSON_IN_CHARGE_OF_DAILY_MANAGEMENT = 3
+class FunctionEnum(enum.StrEnum):
+    DIRECTOR = "DIRECTOR"
+    PERMANENT_REPRESENTATIVE = "PERMANENT_REPRESENTATIVE"
+    PERSON_IN_CHARGE_OF_DAILY_MANAGEMENT = "PERSON_IN_CHARGE_OF_DAILY_MANAGEMENT"
 
 
 @dataclasses.dataclass
-class _Pivot:
+class Pivot:
     function: FunctionEnum
     start_date: datetime.date
 
@@ -34,42 +34,41 @@ class _Pivot:
 
 
 @dataclasses.dataclass
-class EntityPerson(_Pivot):
+class DirectFunction(Pivot):
     def __init__(self, function: str, start_date: str):
         super().__init__(function, start_date)
 
 
 @dataclasses.dataclass
-class Person:
+class NaturalPersonOfficer:
     last_name: str
     first_name: str
-    functions: typing.List[EntityPerson]
+    functions: typing.List[DirectFunction]
 
     def __init__(self, names: str):
-        names = tuple(names.split(" ,\xa0 "))
+        names = tuple(names.split(","))
         self.last_name = names[0]
         self.first_name = names[1]
         self.functions = list()
 
-
 @dataclasses.dataclass
-class EntityEntity(_Pivot):
-    permanent_representative: Person
+class IndirectFunction(Pivot):
+    permanent_representative: NaturalPersonOfficer
 
     def __init__(
         self,
         function: str,
         start_date: str,
-        permanent_representative: Person,
+        permanent_representative: NaturalPersonOfficer,
     ):
         super().__init__(function, start_date)
         self.permanent_representative = permanent_representative
 
 
 @dataclasses.dataclass
-class Entity:
+class LegalPersonOfficer:
     enterprise_number: int
-    functions: typing.List[EntityEntity]
+    functions: typing.List[IndirectFunction]
 
     def __init__(self, enterprise_number: str):
         enterprise_number_parsed = int(

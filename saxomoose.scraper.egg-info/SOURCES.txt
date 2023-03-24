@@ -1,0 +1,15 @@
+LICENSE
+README.md
+pyproject.toml
+saxomoose.scraper.egg-info/PKG-INFO
+saxomoose.scraper.egg-info/SOURCES.txt
+saxomoose.scraper.egg-info/dependency_links.txt
+saxomoose.scraper.egg-info/requires.txt
+saxomoose.scraper.egg-info/top_level.txt
+scraper/__init__.py
+scraper/__main__.py
+scraper/models.py
+scraper/redis_service.py
+scraper/scraper_service.py
+scraper/serialization_service.py
+scraper/utils.py
