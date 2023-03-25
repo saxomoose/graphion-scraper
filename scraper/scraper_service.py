@@ -1,5 +1,4 @@
 import re
-import unicodedata
 import bs4
 from playwright.sync_api import (
     Error as PlaywrightError,
@@ -36,21 +35,21 @@ def parse_target(content):
     except (AttributeError) as e:
         logger.error(e)
 
-    officers_raw = dict()
+    raw_officers = dict()
     for row_index, row in enumerate(rows):
-        officer = [string.replace(' ,\xa0  ', ',') for string in row.stripped_strings]
+        raw_officer = [string.replace(' ,\xa0  ', ',') for string in row.stripped_strings]
 
-        officers_raw[row_index] = officer
+        raw_officers[row_index] = raw_officer
 
-    return parse_dictionary_to_objects(officers_raw)
+    return parse_dictionary_to_objects(raw_officers)
 
 
-def parse_dictionary_to_objects(officers_raw):
+def parse_dictionary_to_objects(raw_officers):
     officers = dict()
     duplicated_keys = list()
     entities = list()
-    for key, officer in officers_raw.items():
-        for index, officer_attribute in enumerate(officer):
+    for key, raw_officer in raw_officers.items():
+        for index, officer_attribute in enumerate(raw_officer):
             if index == 1:
                 if re.match(r"\d{4}\.\d{3}\.\d{3}", officer_attribute):
                     entities.append(key)
@@ -75,17 +74,17 @@ def parse_dictionary_to_objects(officers_raw):
                         officers[key] = model
 
     permanent_representatives = dict()
-    for key, officer in officers_raw.items():
+    for key, raw_officer in raw_officers.items():
         if isinstance(officers[key], models.NaturalPersonOfficer):
-            if len(officer) == 3:
+            if len(raw_officer) == 3:
                 officers[key].functions.append(
-                    models.DirectFunction(function=officer[0], start_date=officer[2])
+                    models.DirectFunction(function=raw_officer[0], start_date=raw_officer[2])
                 )
-            elif len(officer) == 4:
+            elif len(raw_officer) == 4:
                 officers[key].functions.append(
-                    models.DirectFunction(function=officer[0], start_date=officer[3])
+                    models.DirectFunction(function=raw_officer[0], start_date=raw_officer[3])
                 )
-                stripped = officer[2].strip("()")
+                stripped = raw_officer[2].strip("()")
                 enterprise_number = int(
                     str.join("", (c for c in stripped if c.isdigit()))
                 )
@@ -104,8 +103,8 @@ def parse_dictionary_to_objects(officers_raw):
                 if officers[key].enterprise_number == enterprise_number:
                     officers[key].functions.append(
                         models.IndirectFunction(
-                            function=officers_raw[key][0],
-                            start_date=officers_raw[key][2],
+                            function=raw_officers[key][0],
+                            start_date=raw_officers[key][2],
                             permanent_representative=officers[
                                 permanent_representative_index
                             ],

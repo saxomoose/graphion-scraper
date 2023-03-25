@@ -1,8 +1,8 @@
+.git
 .gitignore
 .venv/
 .vscode/
 dev-requirements.in
 Dockerfile
 README.md
-requirements.in
-.git
+saxomoose.scraper.egg-info
