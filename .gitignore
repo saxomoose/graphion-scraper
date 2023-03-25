@@ -7,4 +7,4 @@ dummy/
 get-docker.sh
 requirements.in
 scraper/__pycache__/
-scraper/playwright/playwright-1.30.0-py3-none-manylinux1_x86_64.whl
+playwright/playwright-1.30.0-py3-none-manylinux1_x86_64.whl
